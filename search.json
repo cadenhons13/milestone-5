@@ -1,0 +1,9 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Elevation and Baseball",
+    "section": "",
+    "text": "title: “Does elevation affect baseball hitting?” format: html —\nThe article Effects of altitude and atmospheric conditions on the flight of a baseball motivates this question. The plot below uses Lahman’s player batting data from 2010-2025 and stadium elevations to compare each hitter-season with the elevation of the ballpark in which it was played.\n\npark_elevations &lt;- tribble(\n  ~teamID, ~elevation_feet,\n  \"ARI\", 1086, \"ATL\", 1050, \"BAL\", 20, \"BOS\", 20,\n  \"CHN\", 596, \"CHA\", 594, \"CIN\", 482, \"CLE\", 653,\n  \"COL\", 5180, \"DET\", 600, \"HOU\", 50, \"KCA\", 910,\n  \"LAA\", 160, \"LAN\", 267, \"FLA\", 7, \"FLO\", 7, \"MIA\", 7, \"MIL\", 593,\n  \"MIN\", 840, \"NYN\", 12, \"NYA\", 55, \"OAK\", 25,\n  \"PHI\", 40, \"PIT\", 743, \"SDN\", 13, \"SFN\", 13,\n  \"SEA\", 30, \"SLN\", 450, \"TBA\", 42, \"TEX\", 600,\n  \"TOR\", 250, \"WAS\", 25, \"ATH\", 25\n)\n\nBatting |&gt;\n  filter(yearID &gt;= 2010) |&gt;\n  mutate(plate_appearances = AB + BB + coalesce(HBP, 0) + coalesce(SF, 0)) |&gt;\n  filter(plate_appearances &gt;= 50) |&gt;\n  inner_join(park_elevations, by = \"teamID\") |&gt;\n  mutate(home_runs_per_100_pa = 100 * HR / plate_appearances) |&gt;\n  ggplot(aes(x = elevation_feet, y = home_runs_per_100_pa)) +\n  geom_point(alpha = 0.18, size = 1, color = \"#2c7fb8\") +\n  geom_smooth(method = \"lm\", formula = y ~ x, se = FALSE, color = \"#d95f02\") +\n  scale_x_continuous(labels = scales::comma) +\n  labs(\n    title = \"Home run rates rise with ballpark elevation\",\n    x = \"Approximate stadium elevation (feet)\",\n    y = \"Home runs per 100 plate appearances\"\n  )\n\n\n\n\nHitter-season home run rates by ballpark elevation, 2010-2025."
+  }
+]
